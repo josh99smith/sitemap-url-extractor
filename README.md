@@ -1,6 +1,16 @@
-Get **every URL a website lists in its XML sitemaps**, with the metadata that comes with it: last modification date, change frequency, priority, `hreflang` alternates and image counts. Paste website URLs or sitemap URLs, and the Actor finds the sitemaps (robots.txt, `/sitemap.xml`, `/sitemap_index.xml`, `/wp-sitemap.xml`, ...), follows nested sitemap indexes, unpacks `.xml.gz` files and returns one clean record per page.
+**Sitemap URL extractor**: extract all URLs from a sitemap, with the metadata that comes with them (last modification date, change frequency, priority, `hreflang` alternates and image counts). Paste website URLs or sitemap URLs, and the Actor finds the sitemaps (robots.txt, `/sitemap.xml`, `/sitemap_index.xml`, `/wp-sitemap.xml`, ...), follows nested sitemap indexes, unpacks `.xml.gz` files and returns one clean record per page.
 
 It is built for **SEO specialists, developers and data teams** who need a complete, structured list of a site's pages without crawling it. You pay a small flat price per URL, and sites whose sitemap cannot be found or loaded are reported **free of charge**.
+
+## Features
+
+- Extract all URLs from an XML sitemap or sitemap index
+- Find a website's sitemap automatically via robots.txt and common paths
+- Parse gzip-compressed `.xml.gz` sitemaps and plain-text sitemaps
+- Get `lastmod`, `changefreq`, `priority` and `hreflang` alternates for every URL
+- Filter sitemap URLs by glob, regex or substring patterns
+- Export a full list of website URLs to CSV, Excel or JSON
+- Audit sitemap structure: list every sitemap file with its URL count and depth
 
 ## What can you do with Sitemap URL Extractor?
 
@@ -23,8 +33,6 @@ The Actor reads sitemap files only; it does not crawl the pages themselves. Site
 2. Optionally set **Max URLs per site** (default 5,000) to cap the cost of very large sites, and add **Include / Exclude URL patterns** to keep only the sections you need (for example `**/blog/**` or `/products/`).
 3. Click **Start**. URLs appear in the **Output** tab while the run is in progress.
 4. Download the dataset as JSON, CSV, Excel or XML, or pass it to another Actor or integration.
-
-To run it programmatically, use the **API** tab: any Apify Actor can be started with one HTTP request or via the [JavaScript](https://docs.apify.com/api/client/js) and [Python](https://docs.apify.com/api/client/python) clients.
 
 ```json
 {
@@ -63,7 +71,7 @@ Sitemaps that cannot be found or loaded are still recorded, so nothing silently 
 
 With **List sitemap files only** switched on, each record describes one sitemap file instead (`sitemapUrl`, `kind`, `urlCount`, `childSitemapCount`, `depth`, `lastmod`).
 
-### Fields
+## Output fields
 
 | Field | Description |
 | --- | --- |
@@ -78,6 +86,46 @@ With **List sitemap files only** switched on, each record describes one sitemap 
 | `fetchedAt` | When the sitemap file was read. |
 | `errorType` | For failures only: `invalid-url`, `not-found`, `http-error`, `blocked`, `dns`, `timeout`, `network` or `other`. |
 
+## Use it from the API, Python, JavaScript or an AI agent
+
+Run the Actor and get the dataset back in one HTTP call:
+
+```bash
+curl -X POST "https://api.apify.com/v2/acts/josh99smith~sitemap-url-extractor/run-sync-get-dataset-items?token=<YOUR_API_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{"urls": ["https://blog.apify.com/sitemap.xml"], "maxUrlsPerSite": 1000}'
+```
+
+Python, with the [apify-client](https://docs.apify.com/api/client/python) package:
+
+```python
+from apify_client import ApifyClient
+
+client = ApifyClient("<YOUR_API_TOKEN>")
+run = client.actor("josh99smith/sitemap-url-extractor").call(
+    run_input={"urls": ["https://www.apify.com"], "maxUrlsPerSite": 1000, "includePatterns": ["**/blog/**"]}
+)
+for item in client.dataset(run["defaultDatasetId"]).iterate_items():
+    print(item.get("url"), item.get("lastmod"))
+```
+
+JavaScript or TypeScript, with the [apify-client](https://docs.apify.com/api/client/js) package:
+
+```javascript
+import { ApifyClient } from 'apify-client';
+
+const client = new ApifyClient({ token: '<YOUR_API_TOKEN>' });
+const run = await client.actor('josh99smith/sitemap-url-extractor').call({
+    urls: ['https://www.apify.com'],
+    maxUrlsPerSite: 1000,
+    excludePatterns: ['*.pdf'],
+});
+const { items } = await client.dataset(run.defaultDatasetId).listItems();
+console.log(items.map((item) => item.url));
+```
+
+The Actor is also available as a tool through the Apify MCP server, so AI agents can call it directly, and it can be scheduled or connected to Zapier, Make, n8n and Google Sheets in the **Integrations** tab.
+
 ## Pricing: how much does it cost to extract sitemap URLs?
 
 You pay a **flat price per extracted URL** (shown next to the Start button); 5,000 URLs cost about $1. Nothing is charged for Actor start-up, for failed sites, or for sitemap files that could not be loaded. The Actor stops automatically when it reaches the maximum cost you set for a run, so a huge site never produces a surprise bill, and **Max URLs per site** caps each site individually.
@@ -91,17 +139,36 @@ You pay a **flat price per extracted URL** (shown next to the Start button); 5,0
 
 ## FAQ
 
-**The site has pages that are not in the output. Why?**
+### Why are some pages of the site missing from the output?
+
 Only URLs present in the site's sitemaps are returned; the Actor does not crawl pages. If the site does not maintain a sitemap, use a crawler such as Website Content Crawler instead.
 
-**Does it work with WordPress, Shopify, Wix, Webflow, Next.js sites?**
+### Does it work with WordPress, Shopify, Wix, Webflow and Next.js sites?
+
 Yes. All of them publish standard XML sitemaps (WordPress at `/wp-sitemap.xml` or via Yoast/RankMath sitemap indexes), which the Actor discovers automatically.
 
-**Which sitemap formats are supported?**
+### Which sitemap formats are supported?
+
 XML `urlset` and `sitemapindex` files (including the image, video, news and `xhtml:link` extensions), gzip-compressed `.xml.gz` files and plain-text sitemaps. RSS/Atom feeds are not sitemaps and are reported as `not-found`.
 
-**Is this legal?**
+### What are the limits on URLs, depth and file size?
+
+**Max URLs per site** goes up to 200,000 per run (default 5,000) and **Max sitemap index depth** up to 20 levels (default 5). A single sitemap file may be up to 64 MB uncompressed, which covers the 50 MB limit of the sitemap protocol. Up to 10 sites are processed in parallel with at most 5 concurrent requests per host, and each file request times out after at most 120 seconds.
+
+### Is it legal to extract URLs from a sitemap?
+
 Sitemaps are published specifically so that automated clients can read them. The Actor sends a handful of requests per site at a polite rate and stores only the URLs and metadata the site publishes. You are responsible for using the results in compliance with the laws that apply to you.
+
+## Related Actors by the same developer
+
+- [Website Tech Stack Detector](https://apify.com/josh99smith/tech-stack-detector): find out what a website is built with.
+- [Website Screenshot API](https://apify.com/josh99smith/website-screenshot-api): full-page screenshots and PDFs of any URL.
+- [Google Autocomplete Keyword Scraper](https://apify.com/josh99smith/google-autocomplete-scraper): keyword suggestions from Google search.
+- [App Store & Google Play Reviews Scraper](https://apify.com/josh99smith/app-reviews-scraper): app reviews from both stores.
+- [PageSpeed Insights Core Web Vitals Audit](https://apify.com/josh99smith/pagespeed-insights-audit): Core Web Vitals via Google's API.
+- [Remote Jobs Aggregator API](https://apify.com/josh99smith/remote-jobs-aggregator): remote job listings in one dataset.
+- [PDF Text & Metadata Extractor](https://apify.com/josh99smith/pdf-text-extractor): text and metadata from PDF URLs.
+- [RSS and Atom Feed to JSON](https://apify.com/josh99smith/rss-feed-to-json): RSS, Atom and JSON feeds as JSON items.
 
 ## Support and feedback
 

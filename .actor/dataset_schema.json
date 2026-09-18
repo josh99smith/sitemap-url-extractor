@@ -1,6 +1,127 @@
 {
     "actorSpecification": 1,
-    "fields": {},
+    "fields": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "description": "One record per extracted page URL (default), or one record per sitemap file when List sitemap files only is on. Sites and sitemap files that cannot be loaded produce a free failure record with success: false.",
+        "properties": {
+            "site": {
+                "type": "string",
+                "description": "Origin of the website the record belongs to, derived from the URL you supplied."
+            },
+            "fetchedAt": {
+                "type": "string",
+                "format": "date-time",
+                "description": "When the sitemap file was read (ISO 8601, UTC)."
+            },
+            "sitemapUrl": {
+                "type": "string",
+                "description": "The sitemap file the URL was found in, or the sitemap file this record describes."
+            },
+            "url": {
+                "type": "string",
+                "description": "Absolute page URL listed in the sitemap."
+            },
+            "lastmod": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "description": "Last modification date from the sitemap, normalised to ISO 8601 when possible; null when absent."
+            },
+            "changefreq": {
+                "type": [
+                    "string",
+                    "null"
+                ],
+                "description": "Suggested crawl frequency (always, hourly, daily, weekly, monthly, yearly, never) or null."
+            },
+            "priority": {
+                "type": [
+                    "number",
+                    "null"
+                ],
+                "description": "Sitemap priority between 0.0 and 1.0, or null when absent."
+            },
+            "alternates": {
+                "type": "array",
+                "description": "Language and region alternates declared with xhtml:link rel=alternate (hreflang).",
+                "items": {
+                    "type": "object",
+                    "description": "One hreflang alternate of the page.",
+                    "properties": {
+                        "hreflang": {
+                            "type": "string",
+                            "description": "Language or region code, for example en, de-CH or x-default."
+                        },
+                        "href": {
+                            "type": "string",
+                            "description": "Absolute URL of the alternate version."
+                        }
+                    },
+                    "required": [
+                        "hreflang",
+                        "href"
+                    ]
+                }
+            },
+            "imageCount": {
+                "type": "integer",
+                "description": "Number of image:image entries attached to the URL in the sitemap."
+            },
+            "kind": {
+                "type": "string",
+                "enum": [
+                    "urlset",
+                    "index",
+                    "text"
+                ],
+                "description": "Sitemap file type (sitemap-file records only): urlset lists pages, index lists other sitemaps, text is a plain-text list."
+            },
+            "urlCount": {
+                "type": "integer",
+                "description": "Number of page URLs listed in the sitemap file (sitemap-file records only)."
+            },
+            "childSitemapCount": {
+                "type": "integer",
+                "description": "Number of child sitemaps referenced by a sitemap index file (sitemap-file records only)."
+            },
+            "depth": {
+                "type": "integer",
+                "description": "Nesting level of the sitemap file; 0 for files found directly, 1 for files referenced by an index, and so on (sitemap-file records only)."
+            },
+            "success": {
+                "type": "boolean",
+                "description": "false on failure records; absent on successful URL and sitemap-file records."
+            },
+            "errorType": {
+                "type": "string",
+                "enum": [
+                    "invalid-url",
+                    "dns",
+                    "timeout",
+                    "blocked",
+                    "http-error",
+                    "network",
+                    "not-found",
+                    "other"
+                ],
+                "description": "Failure category, present only on failure records."
+            },
+            "error": {
+                "type": "string",
+                "description": "Human-readable reason the site or sitemap file could not be read, present only on failure records."
+            },
+            "statusCode": {
+                "type": "integer",
+                "description": "HTTP status code returned by the server, present on some failure records."
+            }
+        },
+        "required": [
+            "site",
+            "fetchedAt"
+        ]
+    },
     "views": {
         "overview": {
             "title": "Overview",
@@ -21,16 +142,46 @@
             "display": {
                 "component": "table",
                 "properties": {
-                    "url": { "label": "Page URL", "format": "link" },
-                    "site": { "label": "Site", "format": "link" },
-                    "sitemapUrl": { "label": "Sitemap file", "format": "link" },
-                    "lastmod": { "label": "Last modified", "format": "text" },
-                    "changefreq": { "label": "Change frequency", "format": "text" },
-                    "priority": { "label": "Priority", "format": "number" },
-                    "imageCount": { "label": "# Images", "format": "number" },
-                    "alternates": { "label": "hreflang alternates", "format": "array" },
-                    "errorType": { "label": "Error type", "format": "text" },
-                    "error": { "label": "Error", "format": "text" }
+                    "url": {
+                        "label": "Page URL",
+                        "format": "link"
+                    },
+                    "site": {
+                        "label": "Site",
+                        "format": "link"
+                    },
+                    "sitemapUrl": {
+                        "label": "Sitemap file",
+                        "format": "link"
+                    },
+                    "lastmod": {
+                        "label": "Last modified",
+                        "format": "text"
+                    },
+                    "changefreq": {
+                        "label": "Change frequency",
+                        "format": "text"
+                    },
+                    "priority": {
+                        "label": "Priority",
+                        "format": "number"
+                    },
+                    "imageCount": {
+                        "label": "# Images",
+                        "format": "number"
+                    },
+                    "alternates": {
+                        "label": "hreflang alternates",
+                        "format": "array"
+                    },
+                    "errorType": {
+                        "label": "Error type",
+                        "format": "text"
+                    },
+                    "error": {
+                        "label": "Error",
+                        "format": "text"
+                    }
                 }
             }
         },
@@ -52,15 +203,42 @@
             "display": {
                 "component": "table",
                 "properties": {
-                    "site": { "label": "Site", "format": "link" },
-                    "sitemapUrl": { "label": "Sitemap file", "format": "link" },
-                    "kind": { "label": "Type", "format": "text" },
-                    "urlCount": { "label": "# URLs", "format": "number" },
-                    "childSitemapCount": { "label": "# Child sitemaps", "format": "number" },
-                    "depth": { "label": "Depth", "format": "number" },
-                    "lastmod": { "label": "Last modified", "format": "text" },
-                    "errorType": { "label": "Error type", "format": "text" },
-                    "error": { "label": "Error", "format": "text" }
+                    "site": {
+                        "label": "Site",
+                        "format": "link"
+                    },
+                    "sitemapUrl": {
+                        "label": "Sitemap file",
+                        "format": "link"
+                    },
+                    "kind": {
+                        "label": "Type",
+                        "format": "text"
+                    },
+                    "urlCount": {
+                        "label": "# URLs",
+                        "format": "number"
+                    },
+                    "childSitemapCount": {
+                        "label": "# Child sitemaps",
+                        "format": "number"
+                    },
+                    "depth": {
+                        "label": "Depth",
+                        "format": "number"
+                    },
+                    "lastmod": {
+                        "label": "Last modified",
+                        "format": "text"
+                    },
+                    "errorType": {
+                        "label": "Error type",
+                        "format": "text"
+                    },
+                    "error": {
+                        "label": "Error",
+                        "format": "text"
+                    }
                 }
             }
         }

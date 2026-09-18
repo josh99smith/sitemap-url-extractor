@@ -3,7 +3,7 @@
     "actorSpecification": 1,
     "name": "sitemap-url-extractor",
     "title": "Sitemap URL Extractor",
-    "description": "Extract every URL from a website's XML sitemaps. Finds sitemaps via robots.txt and common paths, follows sitemap indexes and .xml.gz files, and returns lastmod, changefreq, priority and hreflang alternates for each page.",
+    "description": "Extract every URL from a website's XML sitemaps, including sitemap indexes, gzip files and robots.txt discovery, with lastmod and hreflang. Pay per URL.",
     "version": "0.1",
     "buildTag": "latest",
     "meta": {
