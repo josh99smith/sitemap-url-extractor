@@ -1,7 +1,6 @@
 {
     "actorSpecification": 1,
     "fields": {
-        "$schema": "https://json-schema.org/draft/2020-12/schema",
         "type": "object",
         "description": "One record per extracted page URL (default), or one record per sitemap file when List sitemap files only is on. Sites and sitemap files that cannot be loaded produce a free failure record with success: false.",
         "properties": {
