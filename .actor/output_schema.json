@@ -1,0 +1,18 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "Sitemap URL Extractor output",
+    "properties": {
+        "results": {
+            "type": "string",
+            "title": "Extracted URLs",
+            "template": "{{links.apiDefaultDatasetUrl}}",
+            "description": "One record per page URL found in the sitemaps (or per sitemap file in sitemaps-only mode), plus free failure records for sitemaps that could not be loaded."
+        },
+        "summary": {
+            "type": "string",
+            "title": "Run summary",
+            "template": "{{links.apiDefaultKeyValueStoreUrl}}/records/SUMMARY",
+            "description": "Counts of requested sites, sitemap files found, URLs extracted and billed, and failures."
+        }
+    }
+}

@@ -1,0 +1,68 @@
+{
+    "actorSpecification": 1,
+    "fields": {},
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "transformation": {
+                "fields": [
+                    "url",
+                    "site",
+                    "sitemapUrl",
+                    "lastmod",
+                    "changefreq",
+                    "priority",
+                    "imageCount",
+                    "alternates",
+                    "errorType",
+                    "error"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "url": { "label": "Page URL", "format": "link" },
+                    "site": { "label": "Site", "format": "link" },
+                    "sitemapUrl": { "label": "Sitemap file", "format": "link" },
+                    "lastmod": { "label": "Last modified", "format": "text" },
+                    "changefreq": { "label": "Change frequency", "format": "text" },
+                    "priority": { "label": "Priority", "format": "number" },
+                    "imageCount": { "label": "# Images", "format": "number" },
+                    "alternates": { "label": "hreflang alternates", "format": "array" },
+                    "errorType": { "label": "Error type", "format": "text" },
+                    "error": { "label": "Error", "format": "text" }
+                }
+            }
+        },
+        "sitemaps": {
+            "title": "Sitemap files",
+            "transformation": {
+                "fields": [
+                    "site",
+                    "sitemapUrl",
+                    "kind",
+                    "urlCount",
+                    "childSitemapCount",
+                    "depth",
+                    "lastmod",
+                    "errorType",
+                    "error"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "site": { "label": "Site", "format": "link" },
+                    "sitemapUrl": { "label": "Sitemap file", "format": "link" },
+                    "kind": { "label": "Type", "format": "text" },
+                    "urlCount": { "label": "# URLs", "format": "number" },
+                    "childSitemapCount": { "label": "# Child sitemaps", "format": "number" },
+                    "depth": { "label": "Depth", "format": "number" },
+                    "lastmod": { "label": "Last modified", "format": "text" },
+                    "errorType": { "label": "Error type", "format": "text" },
+                    "error": { "label": "Error", "format": "text" }
+                }
+            }
+        }
+    }
+}

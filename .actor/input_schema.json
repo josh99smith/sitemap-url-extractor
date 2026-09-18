@@ -1,0 +1,73 @@
+{
+    "$schema": "https://apify.com/schemas/v1/input.ide.json",
+    "title": "Sitemap URL Extractor input",
+    "description": "Paste website URLs or direct sitemap URLs. Every extracted page URL is one billable result; sites whose sitemap cannot be found or loaded are reported for free.",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "urls": {
+            "title": "Website or sitemap URLs",
+            "type": "array",
+            "description": "One URL per line. A website URL (`https://example.com`) triggers sitemap discovery via robots.txt and common locations such as `/sitemap.xml`; a sitemap URL (`https://example.com/sitemap_index.xml` or `.xml.gz`) is read directly. Duplicates are removed automatically.",
+            "editor": "stringList",
+            "prefill": ["https://www.apify.com", "https://blog.apify.com/sitemap.xml"],
+            "uniqueItems": true
+        },
+        "maxUrlsPerSite": {
+            "title": "Max URLs per site",
+            "type": "integer",
+            "description": "Stop reading the sitemaps of a site once this many page URLs have been extracted. Caps the cost of very large sites.",
+            "default": 5000,
+            "minimum": 1,
+            "maximum": 200000,
+            "editor": "number"
+        },
+        "includePatterns": {
+            "title": "Include URL patterns",
+            "type": "array",
+            "description": "Optional. Keep only URLs matching at least one pattern. Use a glob (`**/blog/**`, `*.pdf`), a regular expression wrapped in slashes (`/\\/products\\/\\d+/`) or a plain substring (`/docs/`). Leave empty to keep every URL.",
+            "editor": "stringList",
+            "default": []
+        },
+        "excludePatterns": {
+            "title": "Exclude URL patterns",
+            "type": "array",
+            "description": "Optional. Drop URLs matching any pattern (same syntax as include patterns). Applied after the include patterns.",
+            "editor": "stringList",
+            "default": []
+        },
+        "maxSitemapDepth": {
+            "title": "Max sitemap index depth",
+            "type": "integer",
+            "description": "How many levels of nested sitemap index files to follow. 0 reads only the sitemap files found directly; 1 also reads the sitemaps they reference, and so on.",
+            "default": 5,
+            "minimum": 0,
+            "maximum": 20,
+            "editor": "number"
+        },
+        "outputSitemapsOnly": {
+            "title": "List sitemap files only",
+            "type": "boolean",
+            "description": "Output one record per discovered sitemap file (with its type and URL count) instead of the page URLs themselves. Useful for auditing the sitemap structure of a site cheaply.",
+            "default": false
+        },
+        "timeoutSecs": {
+            "title": "Request timeout (seconds)",
+            "type": "integer",
+            "description": "Give up on a single sitemap file after this many seconds. Large compressed sitemaps on slow servers may need more.",
+            "default": 30,
+            "minimum": 5,
+            "maximum": 120,
+            "editor": "number",
+            "sectionCaption": "Advanced"
+        },
+        "proxyConfiguration": {
+            "title": "Proxy configuration",
+            "type": "object",
+            "description": "Optional. Route requests through Apify Proxy if a site blocks cloud IP addresses. Proxy usage is billed by Apify separately from the per-URL price of this Actor.",
+            "editor": "proxy",
+            "prefill": { "useApifyProxy": false }
+        }
+    },
+    "required": ["urls"]
+}
