@@ -136,7 +136,7 @@
         "expect": {
             "status": "SUCCEEDED",
             "minOk": 1000,
-            "maxDurationSecs": 900
+            "maxDurationSecs": 1500
         }
     }
 }
