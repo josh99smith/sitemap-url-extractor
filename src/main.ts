@@ -129,12 +129,18 @@ log.info(
 async function pushCharged(records: (UrlRecord | SitemapRecord)[]): Promise<boolean> {
     for (let i = 0; i < records.length; i += PUSH_BATCH_SIZE) {
         if (stopBecauseOfBudget) return false;
-        const batch = records.slice(i, i + PUSH_BATCH_SIZE);
-        const { chargedCount, eventChargeLimitReached } = await Actor.pushData(batch, CHARGE_EVENT);
-        // In pay-per-event mode the SDK only stores as many items as the budget allows.
-        const stored = isPayPerEvent ? Math.min(chargedCount ?? 0, batch.length) : batch.length;
+        const wanted = records.slice(i, i + PUSH_BATCH_SIZE);
+        // Ask the budget how many events still fit and push only that many (the SDK's chargedCount over-reports).
+        const allowed = isPayPerEvent ? Actor.getChargingManager().calculateMaxEventChargeCountWithinLimit(CHARGE_EVENT) : wanted.length;
+        const batch = wanted.slice(0, Math.max(0, allowed));
+        let eventChargeLimitReached = batch.length < wanted.length;
+        if (batch.length > 0) {
+            const result = await Actor.pushData(batch, CHARGE_EVENT);
+            eventChargeLimitReached = eventChargeLimitReached || result.eventChargeLimitReached;
+        }
+        const stored = batch.length;
         urlsPushed += stored;
-        urlsCharged += isPayPerEvent ? (chargedCount ?? 0) : stored;
+        urlsCharged += stored;
         if (eventChargeLimitReached) {
             stopBecauseOfBudget = true;
             log.warning(

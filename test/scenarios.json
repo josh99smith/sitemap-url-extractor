@@ -1,0 +1,123 @@
+{
+    "happy-path": {
+        "input": {
+            "urls": [
+                "https://www.apify.com",
+                "https://blog.apify.com/sitemap.xml"
+            ],
+            "maxUrlsPerSite": 500
+        },
+        "expect": {
+            "status": "SUCCEEDED",
+            "minOk": 500,
+            "maxFailed": 0,
+            "maxDurationSecs": 60
+        }
+    },
+    "gzip-index-big": {
+        "input": {
+            "urls": [
+                "https://www.nytimes.com"
+            ],
+            "maxUrlsPerSite": 3000,
+            "maxSitemapDepth": 3
+        },
+        "expect": {
+            "status": "SUCCEEDED",
+            "minOk": 1000,
+            "maxDurationSecs": 180
+        }
+    },
+    "patterns": {
+        "input": {
+            "urls": [
+                "https://blog.apify.com/sitemap.xml"
+            ],
+            "includePatterns": [
+                "*/tag/*",
+                "/20*"
+            ],
+            "excludePatterns": [
+                "*author*"
+            ],
+            "maxUrlsPerSite": 200
+        },
+        "expect": {
+            "status": "SUCCEEDED",
+            "minOk": 1
+        }
+    },
+    "sitemaps-only": {
+        "input": {
+            "urls": [
+                "https://www.nytimes.com",
+                "https://wordpress.org"
+            ],
+            "outputSitemapsOnly": true,
+            "maxSitemapDepth": 2
+        },
+        "expect": {
+            "status": "SUCCEEDED",
+            "minOk": 2
+        }
+    },
+    "no-sitemap-and-errors": {
+        "input": {
+            "urls": [
+                "https://example.com",
+                "https://httpbin.org/status/404",
+                "https://this-domain-does-not-exist-abc123.com",
+                "bad url"
+            ]
+        },
+        "expect": {
+            "status": "SUCCEEDED",
+            "maxOk": 0,
+            "errorTypes": [
+                "not-found",
+                "http-error",
+                "dns",
+                "invalid-url",
+                "network",
+                "timeout",
+                "blocked"
+            ]
+        }
+    },
+    "robots-discovery": {
+        "input": {
+            "urls": [
+                "https://www.python.org",
+                "https://github.blog"
+            ],
+            "maxUrlsPerSite": 300
+        },
+        "expect": {
+            "status": "SUCCEEDED",
+            "minOk": 100
+        }
+    },
+    "budget-cap": {
+        "input": {
+            "urls": [
+                "https://www.apify.com"
+            ],
+            "maxUrlsPerSite": 5000
+        },
+        "maxTotalChargeUsd": 0.1,
+        "expect": {
+            "status": "SUCCEEDED",
+            "maxItems": 520,
+            "stoppedEarlyDueToBudget": true
+        }
+    },
+    "empty-input": {
+        "input": {
+            "urls": []
+        },
+        "expect": {
+            "status": "FAILED",
+            "maxItems": 0
+        }
+    }
+}
