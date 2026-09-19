@@ -58,6 +58,7 @@ function run(inputUrl: string, responses: Responses, overrides: Partial<ExtractO
         limiter: new HostLimiter(5),
         maxUrls: 1000,
         maxDepth: 5,
+        maxSitemaps: 500,
         include: null,
         exclude: null,
         sitemapsOnly: false,

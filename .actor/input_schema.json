@@ -10,7 +10,10 @@
             "type": "array",
             "description": "One URL per line. A website URL (`https://example.com`) triggers sitemap discovery via robots.txt and common locations such as `/sitemap.xml`; a sitemap URL (`https://example.com/sitemap_index.xml` or `.xml.gz`) is read directly. Duplicates are removed automatically.",
             "editor": "stringList",
-            "prefill": ["https://www.apify.com", "https://blog.apify.com/sitemap.xml"],
+            "prefill": [
+                "https://www.apify.com",
+                "https://blog.apify.com/sitemap.xml"
+            ],
             "uniqueItems": true
         },
         "maxUrlsPerSite": {
@@ -45,6 +48,15 @@
             "maximum": 20,
             "editor": "number"
         },
+        "maxSitemapsPerSite": {
+            "title": "Max sitemap files per site",
+            "type": "integer",
+            "description": "Stop discovering more sitemap files after this many were fetched. Large publishers expose thousands of monthly sitemaps; raise this (and the run memory) if you need the whole tree.",
+            "default": 500,
+            "minimum": 1,
+            "maximum": 50000,
+            "editor": "number"
+        },
         "outputSitemapsOnly": {
             "title": "List sitemap files only",
             "type": "boolean",
@@ -66,8 +78,12 @@
             "type": "object",
             "description": "Optional. Route requests through Apify Proxy if a site blocks cloud IP addresses. Proxy usage is billed by Apify separately from the per-URL price of this Actor.",
             "editor": "proxy",
-            "prefill": { "useApifyProxy": false }
+            "prefill": {
+                "useApifyProxy": false
+            }
         }
     },
-    "required": ["urls"]
+    "required": [
+        "urls"
+    ]
 }

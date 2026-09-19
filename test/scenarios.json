@@ -54,11 +54,14 @@
                 "https://wordpress.org"
             ],
             "outputSitemapsOnly": true,
-            "maxSitemapDepth": 2
+            "maxSitemapDepth": 2,
+            "maxSitemapsPerSite": 300
         },
         "expect": {
             "status": "SUCCEEDED",
-            "minOk": 2
+            "minOk": 100,
+            "maxItems": 620,
+            "maxDurationSecs": 300
         }
     },
     "no-sitemap-and-errors": {
@@ -107,7 +110,7 @@
         "maxTotalChargeUsd": 0.1,
         "expect": {
             "status": "SUCCEEDED",
-            "maxItems": 520,
+            "maxItems": 501,
             "stoppedEarlyDueToBudget": true
         }
     },
@@ -118,6 +121,22 @@
         "expect": {
             "status": "FAILED",
             "maxItems": 0
+        }
+    },
+    "nyt-full-tree-memory": {
+        "input": {
+            "urls": [
+                "https://www.nytimes.com"
+            ],
+            "outputSitemapsOnly": true,
+            "maxSitemapDepth": 3,
+            "maxSitemapsPerSite": 2000
+        },
+        "memoryMbytes": 1024,
+        "expect": {
+            "status": "SUCCEEDED",
+            "minOk": 1000,
+            "maxDurationSecs": 900
         }
     }
 }

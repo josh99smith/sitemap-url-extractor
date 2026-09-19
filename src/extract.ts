@@ -43,6 +43,8 @@ export interface ExtractOptions {
     limiter: HostLimiter;
     maxUrls: number;
     maxDepth: number;
+    /** Stop discovering more sitemap files after this many were fetched (memory and cost guard). */
+    maxSitemaps: number;
     include: Matcher | null;
     exclude: Matcher | null;
     sitemapsOnly: boolean;
@@ -174,13 +176,19 @@ export async function extractSite(inputUrl: string, options: ExtractOptions): Pr
         failures: 0,
         stopped: false,
     };
-    const cache = new Map<string, Loaded>();
     const seenUrls = new Set<string>();
     const visitedSitemaps = new Set<string>();
+    // Sitemaps probed during discovery are handed to the traversal through this map and released as soon
+    // as they are consumed, so parsed documents never accumulate for the whole run (large publishers have
+    // thousands of sitemap files with 10,000+ URLs each).
+    const pending = new Map<string, Loaded>();
 
     const load = async (url: string): Promise<Loaded> => {
-        const cached = cache.get(url);
-        if (cached) return cached;
+        const cached = pending.get(url);
+        if (cached) {
+            pending.delete(url);
+            return cached;
+        }
         const outcome = await options.limiter.run(url, async () => options.fetch(url));
         let loaded: Loaded;
         if (!outcome.ok) {
@@ -208,7 +216,6 @@ export async function extractSite(inputUrl: string, options: ExtractOptions): Pr
                       }
                     : { ok: true, parsed: parsed as ValidSitemap, finalUrl: outcome.finalUrl || url };
         }
-        cache.set(url, loaded);
         return loaded;
     };
 
@@ -217,8 +224,10 @@ export async function extractSite(inputUrl: string, options: ExtractOptions): Pr
     let explicitFailure: SitemapFailure | undefined;
     if (looksLikeSitemapUrl(inputUrl)) {
         const loaded = await load(inputUrl);
-        if (loaded.ok) roots.push({ url: inputUrl, lastmod: null });
-        else explicitFailure = loaded.failure;
+        if (loaded.ok) {
+            pending.set(inputUrl, loaded);
+            roots.push({ url: inputUrl, lastmod: null });
+        } else explicitFailure = loaded.failure;
     }
 
     if (roots.length === 0) {
@@ -235,6 +244,7 @@ export async function extractSite(inputUrl: string, options: ExtractOptions): Pr
                 if (candidate === inputUrl) continue;
                 const loaded = await load(candidate);
                 if (loaded.ok) {
+                    pending.set(candidate, loaded);
                     roots.push({ url: candidate, lastmod: null });
                     break;
                 }
@@ -263,6 +273,7 @@ export async function extractSite(inputUrl: string, options: ExtractOptions): Pr
     const handle = async (item: QueueItem): Promise<void> => {
         if (result.stopped) return;
         const loaded = await load(item.url);
+        pending.delete(item.url);
         if (result.stopped) return;
         if (!loaded.ok) {
             result.failures += 1;
@@ -276,6 +287,7 @@ export async function extractSite(inputUrl: string, options: ExtractOptions): Pr
         if (parsed.kind === 'index') {
             if (item.depth < options.maxDepth) {
                 for (const child of parsed.sitemaps) {
+                    if (visitedSitemaps.size >= options.maxSitemaps) break;
                     if (visitedSitemaps.has(child.url)) continue;
                     visitedSitemaps.add(child.url);
                     queue.push({ url: child.url, depth: item.depth + 1, lastmod: child.lastmod });
@@ -313,7 +325,9 @@ export async function extractSite(inputUrl: string, options: ExtractOptions): Pr
     };
 
     const shouldStop = (): boolean =>
-        result.stopped || (!options.sitemapsOnly && result.urlsEmitted >= options.maxUrls);
+        result.stopped ||
+        result.sitemapsFound >= options.maxSitemaps ||
+        (!options.sitemapsOnly && result.urlsEmitted >= options.maxUrls);
     await drainQueue(queue, 5, handle, shouldStop);
 
     // Every root failure was already reported through onFailure, so no extra site-level record is needed.

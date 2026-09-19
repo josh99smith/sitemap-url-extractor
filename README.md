@@ -41,6 +41,7 @@ The Actor reads sitemap files only; it does not crawl the pages themselves. Site
     "includePatterns": [],
     "excludePatterns": ["*.pdf"],
     "maxSitemapDepth": 5,
+    "maxSitemapsPerSite": 500,
     "outputSitemapsOnly": false
 }
 ```
@@ -130,7 +131,11 @@ The Actor is also available as a tool through the Apify MCP server, so AI agents
 
 You pay a **flat price per extracted URL** (shown next to the Start button); 5,000 URLs cost about $1. Nothing is charged for Actor start-up, for failed sites, or for sitemap files that could not be loaded. The Actor stops automatically when it reaches the maximum cost you set for a run, so a huge site never produces a surprise bill, and **Max URLs per site** caps each site individually.
 
+**How it compares (September 2026).** Apify's own sitemap extractor charges $0.0005 per URL and shows a 16 percent failed-run rate in its public stats; other options charge $0.002 plus a start fee or $0.03 per URL. This Actor is $0.0002 per URL (a 5,000-URL site costs $1), handles sitemap indexes, gzip files and robots.txt discovery, and never bills a site where no sitemap could be found.
+
 ## Tips
+
+- **Huge publishers**: sites like news archives expose thousands of monthly sitemap files. `maxSitemapsPerSite` (default 500) caps how many are fetched; raise it together with the run memory (1 GB or more) to walk the whole tree, and use `outputSitemapsOnly` first to see the tree's size cheaply.
 
 - **Large sites**: news and ecommerce sites can list millions of URLs. Combine **Max URLs per site** with **Include URL patterns** to fetch only the section you care about, or run **List sitemap files only** first to see how the sitemap is structured.
 - **Patterns**: globs (`**/blog/**`, `*.pdf`), regular expressions in slashes (`/\/products\/\d+$/`) and plain substrings (`/docs/`) are all accepted, case-insensitively.
@@ -158,6 +163,10 @@ XML `urlset` and `sitemapindex` files (including the image, video, news and `xht
 ### Is it legal to extract URLs from a sitemap?
 
 Sitemaps are published specifically so that automated clients can read them. The Actor sends a handful of requests per site at a polite rate and stores only the URLs and metadata the site publishes. You are responsible for using the results in compliance with the laws that apply to you.
+
+### Will the output fields change between runs?
+
+No. Output fields are stable: existing fields are never renamed or removed without a major version bump announced in the changelog, and new fields are only ever added. You can build integrations on the schema without checking it after every run.
 
 ## Related Actors by the same developer
 

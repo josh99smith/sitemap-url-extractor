@@ -17,6 +17,7 @@ interface Input {
     includePatterns?: string[];
     excludePatterns?: string[];
     maxSitemapDepth?: number;
+    maxSitemapsPerSite?: number;
     outputSitemapsOnly?: boolean;
     timeoutSecs?: number;
     proxyConfiguration?: {
@@ -70,6 +71,7 @@ Actor.on('aborting', async () => {
 const input = (await Actor.getInput<Input>()) ?? {};
 const maxUrlsPerSite = Math.min(Math.max(input.maxUrlsPerSite ?? 5000, 1), 200_000);
 const maxSitemapDepth = Math.min(Math.max(input.maxSitemapDepth ?? 5, 0), 20);
+const maxSitemapsPerSite = Math.min(Math.max(input.maxSitemapsPerSite ?? 500, 1), 50_000);
 const outputSitemapsOnly = input.outputSitemapsOnly ?? false;
 const timeoutSecs = Math.min(Math.max(input.timeoutSecs ?? 30, 5), 120);
 
@@ -160,6 +162,7 @@ async function processSite(target: string): Promise<void> {
         limiter,
         maxUrls: maxUrlsPerSite,
         maxDepth: maxSitemapDepth,
+        maxSitemaps: maxSitemapsPerSite,
         include,
         exclude,
         sitemapsOnly: outputSitemapsOnly,
