@@ -1,3 +1,5 @@
+![sitemap-url-extractor banner](https://raw.githubusercontent.com/josh99smith/apify-actor-assets/main/banners/sitemap-url-extractor.png)
+
 **Sitemap URL extractor**: extract all URLs from a sitemap, with the metadata that comes with them (last modification date, change frequency, priority, `hreflang` alternates and image counts). Paste website URLs or sitemap URLs, and the Actor finds the sitemaps (robots.txt, `/sitemap.xml`, `/sitemap_index.xml`, `/wp-sitemap.xml`, ...), follows nested sitemap indexes, unpacks `.xml.gz` files and returns one clean record per page.
 
 It is built for **SEO specialists, developers and data teams** who need a complete, structured list of a site's pages without crawling it. You pay a small flat price per URL, and sites whose sitemap cannot be found or loaded are reported **free of charge**.
@@ -47,6 +49,8 @@ The Actor reads sitemap files only; it does not crawl the pages themselves. Site
 ```
 
 ## Output
+
+![Sample output of sitemap-url-extractor](https://raw.githubusercontent.com/josh99smith/apify-actor-assets/main/previews/sitemap-url-extractor.png)
 
 One record per URL:
 
