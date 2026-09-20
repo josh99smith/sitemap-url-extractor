@@ -1,0 +1,67 @@
+[
+    {
+        "name": "get-all-urls-from-a-website-sitemap",
+        "title": "Get all URLs from a website's sitemap",
+        "seoTitle": "Get every URL from a website's XML sitemap",
+        "seoDescription": "Discover a site's sitemap via robots.txt and common paths, walk sitemap indexes and gzip files, and export every URL with lastmod to CSV.",
+        "description": "Discover a website's sitemap through robots.txt and common locations, walk nested sitemap indexes and gzip files, and export every URL with its lastmod date. Paste a homepage or a sitemap URL.",
+        "input": {
+            "urls": [
+                "https://www.apify.com",
+                "https://blog.apify.com/sitemap.xml"
+            ],
+            "maxUrlsPerSite": 5000
+        }
+    },
+    {
+        "name": "list-blog-post-urls-from-a-sitemap",
+        "title": "List only blog post URLs from a sitemap",
+        "seoTitle": "Extract only blog post URLs from a sitemap",
+        "seoDescription": "Filter sitemap URLs with include and exclude patterns, for example only /blog/ paths and no tag or author pages, for content audits and crawls.",
+        "description": "Filter sitemap URLs with include and exclude patterns, here keeping only blog posts and dropping tag and author pages, to seed content audits, crawlers or migration checklists.",
+        "input": {
+            "urls": [
+                "https://blog.apify.com/sitemap.xml"
+            ],
+            "includePatterns": [
+                "/20*",
+                "*/blog/*"
+            ],
+            "excludePatterns": [
+                "*/tag/*",
+                "*/author/*"
+            ],
+            "maxUrlsPerSite": 2000
+        }
+    },
+    {
+        "name": "audit-a-sitemap-index-tree",
+        "title": "Audit a site's sitemap index tree",
+        "seoTitle": "List every sitemap file in a sitemap index (audit mode)",
+        "seoDescription": "List the sitemap files a site exposes, with URL counts and nesting depth, without extracting the URLs themselves. Cheap way to size a crawl.",
+        "description": "List all sitemap files a site exposes, including nested indexes and gzip files, with URL counts and depth, without extracting the page URLs. A cheap way to size a crawl or audit sitemap hygiene on large publishers.",
+        "input": {
+            "urls": [
+                "https://www.nytimes.com",
+                "https://wordpress.org"
+            ],
+            "outputSitemapsOnly": true,
+            "maxSitemapDepth": 2,
+            "maxSitemapsPerSite": 300
+        }
+    },
+    {
+        "name": "recently-updated-pages-from-sitemap-lastmod",
+        "title": "Recently updated pages from sitemap lastmod",
+        "seoTitle": "Find recently updated pages using sitemap lastmod dates",
+        "seoDescription": "Extract URLs with their lastmod, changefreq and priority so you can sort by date and find what a site changed recently.",
+        "description": "Extract URLs with their lastmod, changefreq and priority values so the dataset can be sorted by date to find what a site changed recently, for monitoring competitors or re-crawling only fresh pages.",
+        "input": {
+            "urls": [
+                "https://www.python.org",
+                "https://github.blog"
+            ],
+            "maxUrlsPerSite": 3000
+        }
+    }
+]
