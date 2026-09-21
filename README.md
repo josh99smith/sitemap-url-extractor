@@ -129,7 +129,24 @@ const { items } = await client.dataset(run.defaultDatasetId).listItems();
 console.log(items.map((item) => item.url));
 ```
 
-The Actor is also available as a tool through the Apify MCP server, so AI agents can call it directly, and it can be scheduled or connected to Zapier, Make, n8n and Google Sheets in the **Integrations** tab.
+### Use it from Claude, Cursor, ChatGPT or any MCP client
+
+The Actor is exposed as a tool by the [Apify MCP server](https://mcp.apify.com), so an AI agent can call it by name. Add this to your MCP client configuration (Claude Desktop, Claude Code, Cursor, VS Code, Windsurf and others):
+
+```json
+{
+    "mcpServers": {
+        "apify": {
+            "url": "https://mcp.apify.com?tools=josh99smith/sitemap-url-extractor",
+            "headers": { "Authorization": "Bearer <YOUR_API_TOKEN>" }
+        }
+    }
+}
+```
+
+Then ask, for example: *"List every URL under /blog/ from the sitemap of https://blog.apify.com with josh99smith/sitemap-url-extractor."* The agent fills in the input, runs the Actor and reads the dataset back; you pay the same per-result price as in the Console.
+
+The Actor can also be scheduled, or connected to Zapier, Make, n8n and Google Sheets in the **Integrations** tab.
 
 ## Pricing: how much does it cost to extract sitemap URLs?
 
@@ -188,3 +205,5 @@ No. Output fields are stable: existing fields are never renamed or removed witho
 Found a sitemap that is not parsed correctly? Open a ticket in the **Issues** tab of this Actor with the sitemap URL and we will look into it.
 
 This Actor is open source under the MIT licence.
+
+The full source code is on GitHub: [josh99smith/sitemap-url-extractor](https://github.com/josh99smith/sitemap-url-extractor). Stars and pull requests are welcome.
