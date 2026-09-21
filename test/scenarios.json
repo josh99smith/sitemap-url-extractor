@@ -137,6 +137,8 @@
             "status": "SUCCEEDED",
             "minOk": 1000,
             "maxDurationSecs": 1500
-        }
+        },
+        "slow": true,
+        "maxWallSecs": 1800
     }
 }
