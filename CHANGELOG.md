@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1 (2026-09-20)
+
+- Fixed: with several sitemaps fetched in parallel, two batches could be delivered at once and overshoot the run's cost cap with URLs that were never billed (observed: 1,000 URLs delivered for a 500-URL budget). Charged pushes are now serialised.
+- Duplicate input URLs are now deduplicated by the Actor instead of being rejected by input validation.
+
 ## 0.1.0 (2026-09-18)
 
 - Initial release: discovers sitemaps via robots.txt `Sitemap:` directives and common locations (`/sitemap.xml`, `/sitemap_index.xml`, `/sitemap-index.xml`, `/wp-sitemap.xml`, `/sitemap.txt`).
