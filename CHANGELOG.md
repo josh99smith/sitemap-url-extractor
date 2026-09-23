@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2 (2026-09-23)
+
+- Listing: joined the Best Damn series. New title "Best Damn Sitemap URL Extractor", new description, icon and README banner. No change to inputs, output or pricing.
+
 ## 0.1.1 (2026-09-20)
 
 - Fixed: with several sitemaps fetched in parallel, two batches could be delivered at once and overshoot the run's cost cap with URLs that were never billed (observed: 1,000 URLs delivered for a 500-URL budget). Charged pushes are now serialised.

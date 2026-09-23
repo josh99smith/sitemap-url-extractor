@@ -2,8 +2,8 @@
     "$schema": "https://apify.com/schemas/v1/actor.ide.json",
     "actorSpecification": 1,
     "name": "sitemap-url-extractor",
-    "title": "Sitemap URL Extractor",
-    "description": "Extract every URL from a website's XML sitemaps, including sitemap indexes, gzip files and robots.txt discovery, with lastmod and hreflang. Pay per URL.",
+    "title": "Best Damn Sitemap URL Extractor",
+    "description": "Extract every URL from a website's XML sitemaps, including sitemap indexes, gzip files and robots.txt discovery, with lastmod, priority and hreflang. Give it a domain, get the whole map back, at a tiny price per URL.",
     "version": "0.1",
     "buildTag": "latest",
     "meta": {
