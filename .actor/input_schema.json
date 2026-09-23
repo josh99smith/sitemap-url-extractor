@@ -1,6 +1,6 @@
 {
     "$schema": "https://apify.com/schemas/v1/input.ide.json",
-    "title": "Sitemap URL Extractor input",
+    "title": "Best Damn Sitemap URL Extractor input",
     "description": "Paste website URLs or direct sitemap URLs. Every extracted page URL is one billable result; sites whose sitemap cannot be found or loaded are reported for free.",
     "type": "object",
     "schemaVersion": 1,

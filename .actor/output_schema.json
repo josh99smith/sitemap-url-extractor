@@ -1,6 +1,6 @@
 {
     "actorOutputSchemaVersion": 1,
-    "title": "Sitemap URL Extractor output",
+    "title": "Best Damn Sitemap URL Extractor output",
     "properties": {
         "results": {
             "type": "string",

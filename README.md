@@ -1,4 +1,4 @@
-![sitemap-url-extractor banner](https://raw.githubusercontent.com/josh99smith/apify-actor-assets/main/banners/sitemap-url-extractor.png)
+![sitemap-url-extractor banner](https://raw.githubusercontent.com/josh99smith/apify-actor-assets/main/banners/sitemap-url-extractor.png?v=bd1)
 
 **Sitemap URL extractor**: extract all URLs from a sitemap, with the metadata that comes with them (last modification date, change frequency, priority, `hreflang` alternates and image counts). Paste website URLs or sitemap URLs, and the Actor finds the sitemaps (robots.txt, `/sitemap.xml`, `/sitemap_index.xml`, `/wp-sitemap.xml`, ...), follows nested sitemap indexes, unpacks `.xml.gz` files and returns one clean record per page.
 
@@ -214,6 +214,7 @@ You can also attach [webhooks](https://docs.apify.com/platform/integrations/webh
 - [Best Damn Remote Jobs Aggregator](https://apify.com/josh99smith/remote-jobs-aggregator): remote job listings in one dataset.
 - [Best Damn PDF Text Extractor](https://apify.com/josh99smith/pdf-text-extractor): text and metadata from PDF URLs.
 - [Best Damn RSS to JSON Converter](https://apify.com/josh99smith/rss-feed-to-json): RSS, Atom and JSON feeds as JSON items.
+- [Best Damn YouTube Comments Scraper](https://apify.com/josh99smith/youtube-comments-scraper): comments and replies from YouTube videos and channels.
 
 ## Support and feedback
 
