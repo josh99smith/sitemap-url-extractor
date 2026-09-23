@@ -5,6 +5,7 @@
 - Listing: joined the Best Damn series. New title "Best Damn Sitemap URL Extractor", new description, icon and README banner. No change to inputs, output or pricing.
 - README: new "Integrate and automate your workflow" section (Make, Zapier, n8n, Slack, Airbyte, GitHub, Google Drive, webhooks).
 - Listing: "Best Damn" in the SEO title, refreshed banner, link to the new Best Damn YouTube Comments Scraper.
+- README: link to the new Best Damn YouTube Scraper.
 
 ## 0.1.1 (2026-09-20)
 
