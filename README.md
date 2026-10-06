@@ -219,7 +219,7 @@ You can also attach [webhooks](https://docs.apify.com/platform/integrations/webh
 
 ## Support and feedback
 
-Found a sitemap that is not parsed correctly? Open a ticket in the **Issues** tab of this Actor with the sitemap URL and we will look into it.
+Found a sitemap that is not parsed correctly? Open a ticket in the **Issues** tab of this Actor with the sitemap URL and we will look into it. If this Actor saved you time, a review on its Store page helps other people find it.
 
 This Actor is open source under the MIT licence.
 
